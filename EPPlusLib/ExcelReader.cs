@@ -27,8 +27,6 @@ namespace EPPlusLib
                 throw new FileNotFoundException($"Unfound file '{file}'");
             }
 
-            var products = new List<Product>();
-
             using (var package = new ExcelPackage(fileInfo))
             {
                 var worksheet = package.Workbook.Worksheets[0];
@@ -37,23 +35,9 @@ namespace EPPlusLib
                     throw new InvalidDataException($"Invalid file {file}");
                 }
 
-                var rows = GetRows(worksheet);
-                for (var row = StartRow; row <= rows; row++)
-                {
-                    var name = worksheet.GetValue<string>(row, NameColumn);
-                    var price = worksheet.GetValue<decimal>(row, PriceColumn);
-                    var quantity = worksheet.GetValue<int>(row, QuantityColumn);
-                    var product = new Product
-                    {
-                        Name = name,
-                        Price = price,
-                        Quantity = quantity
-                    };
-                    products.Add(product);
-                }
+                var products = GetProducts(worksheet);
+                return new Stock(products);
             }
-            
-            return new Stock(products);
         }
 
         private static bool IsValid(ExcelWorksheet worksheet)
@@ -63,6 +47,27 @@ namespace EPPlusLib
             return rows > 1 
                    && columns == 3 
                    && string.Equals(worksheet.Name, WorksheetName);
+        }
+
+        private static ICollection<Product> GetProducts(ExcelWorksheet worksheet)
+        {
+            var products = new List<Product>();
+
+            for (var row = StartRow; row <= GetRows(worksheet); row++)
+            {
+                var name = worksheet.GetValue<string>(row, NameColumn);
+                var price = worksheet.GetValue<decimal>(row, PriceColumn);
+                var quantity = worksheet.GetValue<int>(row, QuantityColumn);
+                var product = new Product
+                {
+                    Name = name,
+                    Price = price,
+                    Quantity = quantity
+                };
+                products.Add(product);
+            }
+
+            return products;
         }
 
         private static int GetRows(ExcelWorksheet worksheet)
