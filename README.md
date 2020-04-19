@@ -4,7 +4,7 @@
 Make reads/writes on excel files
 ```
 
-I m using multiple libraries in order to make some dummy read/write operations on excel files.
+I m using multiple libraries in order to make read/write operations on excel files.
  
 - [EPPlus](https://github.com/EPPlusSoftware/EPPlus)
 
