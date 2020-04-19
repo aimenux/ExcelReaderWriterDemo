@@ -8,12 +8,6 @@ namespace EPPlusLib
 {
     public class ExcelReader : IExcelReader
     {
-        private const int StartRow = 2;
-        private const int NameColumn = 1;
-        private const int PriceColumn = 2;
-        private const int QuantityColumn = 3;
-        private const string WorksheetName = "Stock";
-
         static ExcelReader()
         {
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
@@ -46,18 +40,18 @@ namespace EPPlusLib
             var columns = GetColumns(worksheet);
             return rows > 1 
                    && columns == 3 
-                   && string.Equals(worksheet.Name, WorksheetName);
+                   && string.Equals(worksheet.Name, Constants.WorksheetName);
         }
 
         private static ICollection<Product> GetProducts(ExcelWorksheet worksheet)
         {
             var products = new List<Product>();
 
-            for (var row = StartRow; row <= GetRows(worksheet); row++)
+            for (var row = Constants.StartRow; row <= GetRows(worksheet); row++)
             {
-                var name = worksheet.GetValue<string>(row, NameColumn);
-                var price = worksheet.GetValue<decimal>(row, PriceColumn);
-                var quantity = worksheet.GetValue<int>(row, QuantityColumn);
+                var name = worksheet.GetValue<string>(row, Constants.NameColumn);
+                var price = worksheet.GetValue<decimal>(row, Constants.PriceColumn);
+                var quantity = worksheet.GetValue<int>(row, Constants.QuantityColumn);
                 var product = new Product
                 {
                     Name = name,

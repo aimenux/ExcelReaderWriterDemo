@@ -2,6 +2,7 @@
 {
     public class Settings
     {
-        public string ExcelFilePath { get; set; }
+        public string ExcelReaderFilePath { get; set; }
+        public string ExcelWriterFilePath { get; set; }
     }
 }

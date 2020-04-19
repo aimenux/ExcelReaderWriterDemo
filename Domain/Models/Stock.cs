@@ -1,24 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Domain.Models
 {
     public class Stock
     {
-        private readonly ICollection<Product> _products;
+        public IReadOnlyCollection<Product> Products { get; }
 
         public Stock(ICollection<Product> products)
         {
-            _products = products;
+            Products = products?.ToList() ?? throw new ArgumentNullException(nameof(products));
         }
 
-        public int TotalProducts => _products.Count;
-
-        public decimal TotalPrice => _products.Sum(x => x.Price * x.Quantity);
+        public decimal TotalPrice => Products.Sum(x => x.Price * x.Quantity);
 
         public override string ToString()
         {
-            return $"{TotalProducts} Products costs {TotalPrice}$";
+            return $"{Products.Count} Products costs {TotalPrice}$";
         }
     }
 }
